@@ -5,7 +5,6 @@
 
 void dyn_array_stats(int *arr, int N, int M, double *average, int*max, int *min);
 
-
 void dyn_array_stats(int *arr, int N, int M, double *average, int*max, int *min){
     int sum = 0;
     *max = 0;

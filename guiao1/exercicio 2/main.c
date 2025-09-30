@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "ex2_1.h"
+#include "ex2_2.h"
 
 int main(void){
     srand(time(NULL));
@@ -17,11 +18,18 @@ int main(void){
 
     dyn_array_stats(arr,N,M,&average,&max,&min);
 
-    printf("Array: ");
+    printf("Array 2.1: ");
     for (int i = 0; i < N; i++) {
         printf("%d ", arr[i]);
     }
     printf("\nAverage: %.2f, Max: %d, Min: %d\n", average, max, min);
+
+    swap(&arr[0],&arr[3]);
+
+    printf("Array 2.2: ");
+    for (int i = 0; i < N; i++) {
+        printf("%d ", arr[i]);
+    }
 
     return 0;
 }
