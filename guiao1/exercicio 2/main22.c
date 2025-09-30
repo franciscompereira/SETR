@@ -1,0 +1,8 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include "ex2_1.h"
+
+int main(void){
+    
+}

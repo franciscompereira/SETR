@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "ex2_1.h"
+#include "ex2_2.h"
 
 void dyn_array_stats(int *arr, int N, int M, double *average, int*max, int *min);
 
