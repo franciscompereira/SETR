@@ -14,11 +14,11 @@ void dyn_array_stats(int *arr, int N, int M, double *average, int*max, int *min)
         arr[i] = (rand() % M) + 1;  // atribuir nums aleatorios para o intervalo [ 1; M]
         sum += arr[i];              // sum vai conter a soma de todos os valores do array
         if (arr[i] > *max){
-            *max = arr[i];         // define o valor mais alto até agora como maximo
+            *max = arr[i];          // define o valor mais alto até agora como maximo
         }
 
         if (arr[i] < *min){
-            *min = arr[i];         // define o valor mais baixo até agora como minimo
+            *min = arr[i];          // define o valor mais baixo até agora como minimo
         }                           // duvida aqui?
     }
 
