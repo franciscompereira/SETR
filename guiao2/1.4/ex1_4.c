@@ -1,34 +1,30 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int main(int argc, char *argv[]){
-
+int main(int argc, char *argv[]) {
     char command[100];
-    int n;                      //number of files that will be created
+    int n;
 
-    if (argc != 3) {            // Check if user provided both arguments
+    if (argc != 3) {
         fprintf(stderr, "Usage: %s <name> <n>\n", argv[0]);
         return 1;
     }
 
-    // Convert second argument (string) to integer
     n = atoi(argv[2]);
     if (n < 1 || n > 99) {
-        fprintf(stderr, "Error: n must be between 1 and 99.\n"); //print formatado
+        fprintf(stderr, "Error: n must be between 1 and 99.\n");
         return 1;
     }
 
-    // Loop to create n folders
     for (int i = 1; i <= n; i++) {
-        snprintf(command, sizeof(command), "rmdir %s%d", argv[1], i);
+        snprintf(command, sizeof(command), "rmdir \"%s%d\"", argv[1], i);
 
-        // Execute mkdir command
+        printf("Removing folder: %s%d\n", argv[1], i);
+
         if (system(command) == -1) {
             perror("system");
             return 1;
         }
-
-        printf("Deleted folder: %s%d\n", argv[1], i);
     }
 
     return 0;
