@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <unistd.h>
+#include <stdlib.h>
+#include <stdlib.h>
 #include <sys/wait.h>
+
 
 
 int main(void){
@@ -12,7 +15,6 @@ int main(void){
     pid = fork(); // create a new process
 
     if (pid < 0){
-
         perror("fork");
         return 1;
     }
@@ -20,10 +22,15 @@ int main(void){
     else if (pid == 0){
         //child process
         printf("Hello from the child process! My PID is %d, my parent is %d\n", getpid(), getppid());
+        sleep(2);
     }
     else {
         //parent process
         printf("Hello from the parent process! My PID is %d, i created child PID %d\n", getpid(), pid);
+        wait(NULL); // wait for the child to finish
     }
 
 }
+
+// sem sleep nem wait ambos os processos correm na consola de forma independente, logo tanto a ordem do printf é random. Caso ponhamos sleep e wait é tudo mais
+// controlado e garantimos que o filho demora 2 unidades de tempo e o pai espera pelo filho

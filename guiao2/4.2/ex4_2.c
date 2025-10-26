@@ -4,30 +4,27 @@
 #include <signal.h>
 #include <unistd.h>
 
-/*
-struct sigaction {
-    void     (*sa_handler)(int);
-    void     (*sa_sigaction)(int, siginfo_t *, void *);
-    sigset_t   sa_mask;
-    int        sa_flags;
-    void     (*sa_restorer)(void);
-    };
-*/
-
+// volatile implica que nao guardemos as 2 variaveis na memoria do CPU dado que vão estar a ser alteradas regularmente
+volatile sig_atomic_t is_paused = 0;
+volatile sig_atomic_t counter = 0;
 
 void handler (int sig){
     switch(sig){
         case SIGINT:
             printf("Caught signal: SIGINT \n");
+            counter = 0;       // Reset the counter
+            is_paused = 0;     // Ensure it's not paused
             break;
         case SIGHUP:
             printf("Caught signal: SIGHUP \n");
+            is_paused = 1;     // Set the pause flag
             break;
         case SIGUSR1:
             printf("Caught signal: SIGUSR1 \n");
             break;
         case SIGCONT:
             printf("Received SIGCONT (Continue)\n");
+            is_paused = 0;
             break;
         default:
             printf("Caught signal: %d\n",sig);    
@@ -36,6 +33,7 @@ void handler (int sig){
 }
 
 int main(void){
+
     struct sigaction sa;  // sa é signal action
 
     memset(&sa,0,sizeof(sa));
@@ -44,8 +42,8 @@ int main(void){
 
     sigemptyset(&sa.sa_mask);
 
-    //Register Handlers
-    
+    // Register Handlers in case of signal failure
+
     if(sigaction(SIGINT , &sa , NULL) ==-1 ){
         perror("Sigaction SIGINT");
         exit(1);
@@ -70,10 +68,12 @@ int main(void){
     printf("send me signals with: kill -SIGINT");
 
     while(1){                                       //loop inf a receber signals
-        pause();
+         if (!is_paused) {
+            printf("Timer: %d\n", counter);
+            counter++;
+        }
+        sleep(1);
     }
 
     return 0;
 }
-
-//kill -KILL PID number

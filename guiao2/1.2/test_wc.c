@@ -7,7 +7,7 @@ int main(int argc, char *argv[]){   // argc é sempre pelo menos 1, dado que o c
     int ret = 0;                    // veriável de retorno
 
     if(argc < 2){
-        return 1;                   // argc = 2 pois ao compilar teremos de ler pelo menos program name + filename
+        return 1;                   // argc = 2 pois ao compilar teremos de ler pelo menos program name + text_filename
     }
 
     snprintf(command,sizeof(command), "wc -w -m \"%s\"", argv[1]); // -w -> word e -m -> chars, ver mais em man wc
