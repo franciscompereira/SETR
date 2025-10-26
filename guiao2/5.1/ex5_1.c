@@ -3,7 +3,7 @@
 #include <pthread.h>
 #include <unistd.h> // for sleep()
 
-// Thread function          chatgptcode
+// Thread function
 void* thread_function(void* arg) {
     int thread_id = *(int*)arg;
 
