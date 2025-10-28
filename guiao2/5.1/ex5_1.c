@@ -8,17 +8,17 @@ void* thread_function(void* arg) {
     int thread_id = *(int*)arg;
 
     printf("Thread %d starting\n", thread_id);
-    sleep(2 + thread_id);  // wait for a few seconds (different per thread)
+    sleep(2 + thread_id);  // wait for a few seconds (different per thread), garantir que não vêm ao mesmo tempo
     printf("Thread %d finishing\n", thread_id);
 
-    pthread_exit(NULL);
+    pthread_exit(NULL);  // same as return null
 }
 
 int main() {
     pthread_t threads[2];
     int thread_ids[2] = {1, 2};
     int rc;
-
+    
     printf("Main thread: creating two threads named 1 and 2\n");
 
     // Create two threads
