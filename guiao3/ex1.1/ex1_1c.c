@@ -22,7 +22,6 @@ int main(int argc, char *argv[])
     int num;
     ssize_t bytes_read;
 
-    // Check argument count
     if (argc != 2) {
         fprintf(stderr, "Usage: %s <fifo_path>\n", argv[0]);
         exit(EXIT_FAILURE); // Exit on incorrect usage
@@ -31,7 +30,6 @@ int main(int argc, char *argv[])
     path_fifo = argv[1];
     printf("[Consumer] Using FIFO path: %s\n", path_fifo);
 
-    // Open the FIFO for reading
     printf("[Consumer] Opening FIFO for reading (will block until producer opens)...\n");
     fd = open(path_fifo, O_RDONLY);
     if (fd == -1) {
@@ -40,14 +38,11 @@ int main(int argc, char *argv[])
     }
     printf("[Consumer] FIFO opened. Waiting for data...\n");
 
-    // Read loop
-    // Check if read returns the expected number of bytes
     while ((bytes_read = read(fd, &num, sizeof(num))) == sizeof(num))
     {
         printf("[Consumer] Received number: %d\n", num);
     }
 
-    // Check why the loop ended
     if (bytes_read == 0) {
         printf("[Consumer] Producer closed the pipe (EOF).\n");
     } else if (bytes_read == -1) {
@@ -57,7 +52,6 @@ int main(int argc, char *argv[])
         fprintf(stderr, "[Consumer] Received incomplete data (%zd bytes) before EOF/error.\n", bytes_read);
     }
 
-    // Cleanup
     printf("[Consumer] Closing FIFO.\n");
     if (close(fd) == -1) {
         perror("close failed");

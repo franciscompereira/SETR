@@ -20,7 +20,6 @@ int main(int argc, char *argv[])
     int fd;
     int num;
 
-    // Check argument count
     if (argc != 2) {
         fprintf(stderr, "Usage: %s <fifo_path>\n", argv[0]);
         exit(EXIT_FAILURE); // Exit on incorrect usage
@@ -29,7 +28,6 @@ int main(int argc, char *argv[])
     path_fifo = argv[1];
     printf("[Producer] Using FIFO path: %s\n", path_fifo);
 
-    // Create the FIFO
     printf("[Producer] Attempting to create FIFO...\n");
     if (mkfifo(path_fifo, 0666) == -1) {
         // EEXIST means it already exists, which is okay.
@@ -42,7 +40,6 @@ int main(int argc, char *argv[])
         printf("[Producer] FIFO created successfully.\n");
     }
 
-    // Open the FIFO for writing
     printf("[Producer] Opening FIFO for writing (will block until consumer opens)...\n");
     fd = open(path_fifo, O_WRONLY);
     if (fd == -1) {
@@ -52,7 +49,6 @@ int main(int argc, char *argv[])
     }
     printf("[Producer] FIFO opened. Enter integers (non-integer or Ctrl+D to quit):\n");
 
-    // Read loop
     while (scanf("%d", &num) == 1) // verifica que foi lido com sucesso
     {
         printf("[Producer] Writing number: %d\n", num);
