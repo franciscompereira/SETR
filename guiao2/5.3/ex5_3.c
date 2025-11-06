@@ -5,11 +5,12 @@
 #include <unistd.h>     // For sleep(), pause()
 #include <string.h>     // For memset(), strerror()
 
-/**
+/*
  * @brief This is the signal handler.
  * It's run by whichever thread receives the signal.
  * We use the advanced sa_sigaction handler to get more info.
  */
+
 void handler(int sig, siginfo_t *info, void *context) {
     // (void)context; // Supress "unused variable" warning
     
@@ -26,10 +27,11 @@ void handler(int sig, siginfo_t *info, void *context) {
     // which flushes its buffers.
 }
 
-/**
+/*
  * @brief This is the worker thread's main function.
  * It just waits to be told to exit.
  */
+
 void *worker(void* arg) {
     int id = *(int*)arg;
     pthread_t thread_id = pthread_self();
