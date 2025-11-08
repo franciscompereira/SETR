@@ -3,6 +3,7 @@
 #include <pthread.h>
 #include <unistd.h>
 #include <semaphore.h>
+#define BUFFER_SIZE 10
 
 volatile int counter = 0;    
 sem_t semi;

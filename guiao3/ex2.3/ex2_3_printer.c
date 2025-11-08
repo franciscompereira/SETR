@@ -5,7 +5,7 @@
 #include <sys/mman.h>
 #include <sys/stat.h>   
 #include <stdint.h>     
-#define BUFFER_SIZE 10 
+#define BUFFER_SIZE 10
 
 const char *SHM_NAME = "/my_ring_buffer";
 
