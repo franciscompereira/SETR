@@ -58,7 +58,6 @@ void insertAtEnd(Node** head, int data) {
     current->next = newNode;
 }
 
-
 // Deletar um node escolhido
 void deleteNode(Node** head, int value) {
     if (*head == NULL) {

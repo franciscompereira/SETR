@@ -118,8 +118,7 @@ int main() {
     uint64_t total_ns;
 
     
-    
-    /* Compute the integral - single thread */
+   /* Compute the integral - single thread */
     printf("--- Running Single-Threaded Version ---\n");
     clock_gettime(CLOCK_MONOTONIC, &t0);
     res=numIntegrate(a, b, np, &integral);
@@ -135,7 +134,7 @@ int main() {
     }
     
     // -------------------------------------------------------------------
-    // --- MODIFIED 4-SEGMENT VERSION (following your logic) ---
+    // --- MODIFIED 4-SEGMENT VERSION (Using a loop, as you suggested) ---
     // -------------------------------------------------------------------
     
     printf("\n--- Running 4-Thread Parallel Version ---\n");
@@ -143,65 +142,49 @@ int main() {
     nseg=4;         // Number of segments
     snp = np/nseg;      // Number of points in each segment
     segsize = (b-a) / (double) nseg;  // The segment range
-    res = 0;
     
-    // --- Declare thread IDs and argument structs ---
-    pthread_t t1_id, t2_id, t3_id, t4_id;
-    tIArgs_type t1_args, t2_args, t3_args, t4_args;
+    // --- Use arrays for results, threads, and args ---
+    double results[4] = {0.0};
+    pthread_t t_ids[4];
+    tIArgs_type t_args[4];
 
     // --- FORK PHASE (Create 4 threads) ---
-  
-    // --- Segment 1 ---
-    sa = a;
-    sb = sa + segsize; // Fixed the bug from the original code
-    t1_args = (tIArgs_type){.lower=sa, .upper=sb, .nsteps=snp, .intVal=&integ_s1};
-    res = pthread_create(&t1_id, NULL, integration_worker, &t1_args);
-    if(res != 0) {   
-        printf("Thread creation failed - segment 1\n");
-        exit(EXIT_FAILURE);
-    }
+    printf("Main thread creating %d threads...\n", nseg);
+    for (int i = 0; i < nseg; i++) {
+        sa = a + i * segsize; // Segment start
+        sb = sa + segsize;    // Segment end
         
-    // --- Segment 2 ---
-    sa = a + segsize;
-    sb = sa + segsize; // Fixed the bug from the original code
-    t2_args = (tIArgs_type){.lower=sa, .upper=sb, .nsteps=snp, .intVal=&integ_s2};
-    res = pthread_create(&t2_id, NULL, integration_worker, &t2_args);
-    if(res != 0) {   
-        printf("Thread creation failed - segment 2\n");
-        exit(EXIT_FAILURE);
-    }
+        // Handle the last segment to avoid floating point errors
+        if (i == nseg - 1) {
+            sb = b;
+        }
         
-    // --- Segment 3 ---
-    sa = a + 2*segsize;
-    sb = sa + segsize; // Fixed the bug from the original code
-    t3_args = (tIArgs_type){.lower=sa, .upper=sb, .nsteps=snp, .intVal=&integ_s3};
-    res = pthread_create(&t3_id, NULL, integration_worker, &t3_args);
-    if(res != 0) {   
-        printf("Thread creation failed - segment 3\n");
-        exit(EXIT_FAILURE);
+        // Load this thread's unique arguments into its struct
+        t_args[i].lower = sa;
+        t_args[i].upper = sb;
+        t_args[i].nsteps = snp;
+        t_args[i].intVal = &results[i]; // Point to this thread's slot in the results array
+
+        // Create the thread
+        res = pthread_create(&t_ids[i], NULL, integration_worker, &t_args[i]);
+        if (res != 0) {
+            fprintf(stderr, "Error creating thread %d: %s\n", i, strerror(res));
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    // --- JOIN PHASE (Wait for all 4 threads) ---
+    printf("Main thread waiting for all %d threads to join...\n", nseg);
+    for (int i = 0; i < nseg; i++) {
+        pthread_join(t_ids[i], NULL);
     }
     
-    // --- Segment 4 ---
-    sa = a + 3*segsize;
-    sb = b; // Use 'b' for the final boundary to avoid floating point errors
-    t4_args = (tIArgs_type){.lower=sa, .upper=sb, .nsteps=snp, .intVal=&integ_s4};
-    res = pthread_create(&t4_id, NULL, integration_worker, &t4_args);
-    if(res != 0) {   
-        printf("Thread creation failed - segment 4\n");
-        exit(EXIT_FAILURE);
-    }
-
-    // --- JOIN PHASE (Wait for all threads to finish) ---
-    printf("Main thread waiting for all 4 threads to join...\n");
-    pthread_join(t1_id, NULL);
-    pthread_join(t2_id, NULL);
-    pthread_join(t3_id, NULL);
-    pthread_join(t4_id, NULL);
-    printf("All threads have joined.\n");
-
     // --- AGGREGATE PHASE (Sum the results) ---
-    // This code is now safe to run because we know all threads are done.
-    integral = integ_s1 + integ_s2 + integ_s3 + integ_s4;
+    printf("All threads have joined. Summing results...\n");
+    integral = 0.0; // Reset integral
+    for (int i = 0; i < nseg; i++) {
+        integral += results[i];
+    }
     
     clock_gettime(CLOCK_MONOTONIC, &t1);
     total_ns = (ts_to_ns(&t1) - ts_to_ns(&t0));
