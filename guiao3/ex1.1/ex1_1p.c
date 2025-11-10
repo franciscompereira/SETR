@@ -1,79 +1,54 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h> // For exit(), EXIT_FAILURE
-#include <errno.h>  // For errno
-#include <string.h> // For strerror()
-
-    //int mkfifo("numberPipe",0066);     cria uma pipe
-    //int fd = open(const char *pathname, int flags); abre a pipe para ler ou para escrever
-    //RDONLY
-    //WRONLY
-    //write(fd, "Hello", 5)
-    //int d = read(int fd, void *buf, size_t count);
+#include <errno.h>
 
 
-int main(int argc, char *argv[])
-{
-    const char *path_fifo;
+int main(int argc, char* argv[]){
+
+    const char* path_fifo;
     int fd;
     int num;
 
-    if (argc != 2) {
-        fprintf(stderr, "Usage: %s <fifo_path>\n", argv[0]);
-        exit(EXIT_FAILURE); // Exit on incorrect usage
+    if(argc != 2){
+        //fprintf(stderr, "Usage: %s <fifo_path>\n", argv[0]);        
+        exit(1);
     }
 
-    path_fifo = argv[1];
+    path_fifo = argv[1];  // pipeline name
     printf("[Producer] Using FIFO path: %s\n", path_fifo);
-
-    printf("[Producer] Attempting to create FIFO...\n");
-    if (mkfifo(path_fifo, 0666) == -1) {
-        // EEXIST means it already exists, which is okay.
-        if (errno != EEXIST) {
-            perror("mkfifo failed");
+    if(mkfifo(path_fifo, 0666) == -1){
+        if(errno != EEXIST){
+            perror("FIFO Generation Error");
             exit(EXIT_FAILURE);
         }
-        printf("[Producer] FIFO already exists, reusing.\n");
-    } else {
-        printf("[Producer] FIFO created successfully.\n");
+        // in case the path already exists
+        printf("[Producer] path already exists \n");
+    }else {
+        printf("FIFO created successfully \n");
     }
 
-    printf("[Producer] Opening FIFO for writing (will block until consumer opens)...\n");
-    fd = open(path_fifo, O_WRONLY);
-    if (fd == -1) {
-        perror("open failed");
-        // Don't unlink if open failed, consumer might need it or already have it open
+    fd = open(path_fifo,O_WRONLY);
+    if (fd == -1){
+        perror("[Producer] Error writing");
         exit(EXIT_FAILURE);
     }
-    printf("[Producer] FIFO opened. Enter integers (non-integer or Ctrl+D to quit):\n");
 
-    while (scanf("%d", &num) == 1) // verifica que foi lido com sucesso
-    {
-        printf("[Producer] Writing number: %d\n", num);
-        ssize_t bytes_written = write(fd, &num, sizeof(num));
-        if (bytes_written == -1) {
-            perror("write failed");
-            break; // Stop if write fails
-        } else if (bytes_written < sizeof(num)) {
-            fprintf(stderr, "[Producer] Warning: Incomplete write occurred.\n");
+    printf("[Producer] FIFO opened. Enter integers: \n");
+
+    while(scanf("%d", &num) == 1){
+        printf("producer sending num: %d \n", num);
+        if(write(fd,&num, sizeof(int)) == -1){
+                perror ("Producer writing error");
+                break;
         }
     }
+    
+    printf("[Producer] Done Writing, now closing FIFO \n");
+    close(fd);
+    unlink(path_fifo);
 
-    // Cleanup
-    printf("[Producer] End of input detected. Closing FIFO.\n");
-    if (close(fd) == -1) {
-        perror("close failed");
-        // Continue to unlink even if close fails
-    }
-
-    printf("[Producer] Removing FIFO '%s'.\n", path_fifo);
-    if (unlink(path_fifo) == -1) {
-         perror("unlink failed");
-         // Exit with error if unlink fails? Or just report? For now, report.
-    }
-
-    printf("[Producer] Exiting.\n");
-    return 0; // Return 0 for success
+    return 0;
 }

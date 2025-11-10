@@ -1,73 +1,71 @@
-#define window_size 5
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h> // For exit(), EXIT_FAILURE
-#include <errno.h>  // For errno
-#include <string.h> // For strerror()
+#include <errno.h>
+#define window_size 5
 
-int main(int argc, char *argv[]){
 
-   const char *path_fifo;
+int main(int argc, char* argv[]){
+    char* path_fifo;
     int fd;
     int num;
-    ssize_t bytes_read;
-    int buffer[window_size] = {0}; // Initialize our window to all zeros
-    int index = 0;                 // Current position in the buffer
-    int count = 0;                 // How many numbers we've read so far
-    double sum = 0.0;              // Current sum of the buffer (use double for floats)
+    int buffer[window_size] = {0};
+    int index;
+    int count = 0;
+    double average = 0.0;
+    double sum = 0.0;
 
-    if (argc != 2){
-        fprintf(stderr, "Usage: %s <fifo_path>\n", argv[0]);
-        exit(1);
+    if(argc != 2){
+        fprintf(stderr,"Number of arguments incorrect: %s", argv[0]);
+        exit(EXIT_FAILURE);
     }
-
-    // config da pipe
 
     path_fifo = argv[1];
+    printf("[Consumer] is using the pipe: %s \n",path_fifo);
 
-    if (mkfifo(path_fifo,0666) == -1){
-        if (errno != EEXIST) {
-            fprintf(stderr, "[Producer] Could not create FIFO: %s\n", strerror(errno));
-            exit(1);
+    if(mkfifo(path_fifo,0666) == -1){
+        if(errno != EEXIST){
+            perror("error creating pipeline");
+            exit(EXIT_FAILURE);
         }
-    printf("[Consumer] FIFO already exists. Connecting...\n");
-    } else{
-        printf("[Consumer] Created new FIFO: %s \n", path_fifo);
+        printf("[Consumer] Path already exists \n");
+    }else{
+        printf("FIFO created successfully");
     }
 
-    // entrada e uso da pipe
-
-    fd = open(path_fifo, O_RDONLY);
+    fd = open(path_fifo,O_RDONLY);
     if(fd == -1){
-        perror("[Consumer] Failed to open FIFO");
-        exit(1);
+        perror("[Consumer] error opening");
+        exit(EXIT_FAILURE);
     }
-    printf("[Consumer] connected! Enter numbers (Ctrl+D to quit): \n");
 
-    while ((bytes_read = read(fd, &num, sizeof(num))) > 0){
+    printf("[Consumer] FIFO opened \n");
 
+    while(read(fd,&num,sizeof(int))){
         printf("[Consumer] Received: %d\n", num);
-        sum -= buffer[index];
-        sum += num;
-        buffer[index] = num;
-        index = (index + 1) % window_size;
+
+        sum = sum - buffer[index]; // ir retirando ultimos numero
+        sum += num;                // acrescentar ultimo numero na sma
+        buffer[index] = num;       // acrescentar ultimo nmero no buffer
+        index = (index +1) % window_size;  //reposicionar index
+
         if (count < window_size) {
             count++;
-            printf("[Consumer] ... buffering data (%d/%d)\n", count, window_size);
+            //printf("[Consumer] ... buffering data (%d/%d)\n", count, window_size);
         } else {
+            // Buffer is full, so we can now print the average
             double average = sum / window_size;
-            printf("[Consumer] MOVING AVERAGE: %.2f\n", average);
+            printf("[Consumer] MOVING AVERAGE: %.2f\n", average); // Use %.2f for a double
         }
+
     }
-    
-    if (bytes_read == 0) {
-        printf("[Consumer] Producer disconnected (EOF). Exiting.\n");
-    } else {
-        // This will run if read() fails
-        perror("[Consumer] read error");
-    }
+
+
+    printf("[Consumer] Done Writing, now closing FIFO \n");
     close(fd);
+    // unlink(path_fifo);
+
     return 0;
 }
