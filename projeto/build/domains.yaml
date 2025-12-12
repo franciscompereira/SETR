@@ -1,0 +1,7 @@
+default: teste_pedreiras
+build_dir: C:/Users/fpmp0/OneDrive/Documentos/Nordic/teste_pedreiras/build
+domains:
+  - name: teste_pedreiras
+    build_dir: C:/Users/fpmp0/OneDrive/Documentos/Nordic/teste_pedreiras/build/teste_pedreiras
+flash_order:
+  - teste_pedreiras

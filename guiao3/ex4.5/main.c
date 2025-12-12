@@ -18,7 +18,6 @@ pthread_mutex_t g_mutex; // The "lock" for the whiteboard
 sem_t g_sem_full;  // The "counter" for full slots
 sem_t g_sem_empty; // The "counter" for empty slots
 
-
 void* producer_function(void* arg) {
     for (uint16_t i = 1; i <= 20; i++) {
                 
@@ -56,8 +55,11 @@ void* consumer_function(void* arg) {
 
         sem_post(&g_sem_empty); // SIGNAL" (Tell the producer a slot is free)
 
-        if (i % 4 == 0) sleep(10); // atrasar consumer prepositadamente
-        else sleep(1);
+        if (i % 4 == 0){
+            sleep(10); // atrasar consumer prepositadamente
+        } else {
+            sleep(1);
+        }
     }
     return NULL;
 }

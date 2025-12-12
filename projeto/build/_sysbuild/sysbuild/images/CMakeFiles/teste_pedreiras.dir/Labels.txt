@@ -1,0 +1,13 @@
+# Target labels
+ teste_pedreiras
+# Source files and their labels
+C:/Users/fpmp0/OneDrive/Documentos/Nordic/teste_pedreiras/build/_sysbuild/sysbuild/images/CMakeFiles/teste_pedreiras
+C:/Users/fpmp0/OneDrive/Documentos/Nordic/teste_pedreiras/build/_sysbuild/sysbuild/images/CMakeFiles/teste_pedreiras.rule
+C:/Users/fpmp0/OneDrive/Documentos/Nordic/teste_pedreiras/build/_sysbuild/sysbuild/images/CMakeFiles/teste_pedreiras-complete.rule
+C:/Users/fpmp0/OneDrive/Documentos/Nordic/teste_pedreiras/build/_sysbuild/sysbuild/images/teste_pedreiras-prefix/src/teste_pedreiras-stamp/teste_pedreiras-build.rule
+C:/Users/fpmp0/OneDrive/Documentos/Nordic/teste_pedreiras/build/_sysbuild/sysbuild/images/teste_pedreiras-prefix/src/teste_pedreiras-stamp/teste_pedreiras-configure.rule
+C:/Users/fpmp0/OneDrive/Documentos/Nordic/teste_pedreiras/build/_sysbuild/sysbuild/images/teste_pedreiras-prefix/src/teste_pedreiras-stamp/teste_pedreiras-download.rule
+C:/Users/fpmp0/OneDrive/Documentos/Nordic/teste_pedreiras/build/_sysbuild/sysbuild/images/teste_pedreiras-prefix/src/teste_pedreiras-stamp/teste_pedreiras-install.rule
+C:/Users/fpmp0/OneDrive/Documentos/Nordic/teste_pedreiras/build/_sysbuild/sysbuild/images/teste_pedreiras-prefix/src/teste_pedreiras-stamp/teste_pedreiras-mkdir.rule
+C:/Users/fpmp0/OneDrive/Documentos/Nordic/teste_pedreiras/build/_sysbuild/sysbuild/images/teste_pedreiras-prefix/src/teste_pedreiras-stamp/teste_pedreiras-patch.rule
+C:/Users/fpmp0/OneDrive/Documentos/Nordic/teste_pedreiras/build/_sysbuild/sysbuild/images/teste_pedreiras-prefix/src/teste_pedreiras-stamp/teste_pedreiras-update.rule

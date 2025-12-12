@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "C:/Users/fpmp0/OneDrive/Documentos/Nordic/teste_pedreiras/build/_sysbuild/sysbuild/images/CMakeFiles/teste_pedreiras"
+		},
+		{
+			"file" : "C:/Users/fpmp0/OneDrive/Documentos/Nordic/teste_pedreiras/build/_sysbuild/sysbuild/images/CMakeFiles/teste_pedreiras.rule"
+		},
+		{
+			"file" : "C:/Users/fpmp0/OneDrive/Documentos/Nordic/teste_pedreiras/build/_sysbuild/sysbuild/images/CMakeFiles/teste_pedreiras-complete.rule"
+		},
+		{
+			"file" : "C:/Users/fpmp0/OneDrive/Documentos/Nordic/teste_pedreiras/build/_sysbuild/sysbuild/images/teste_pedreiras-prefix/src/teste_pedreiras-stamp/teste_pedreiras-build.rule"
+		},
+		{
+			"file" : "C:/Users/fpmp0/OneDrive/Documentos/Nordic/teste_pedreiras/build/_sysbuild/sysbuild/images/teste_pedreiras-prefix/src/teste_pedreiras-stamp/teste_pedreiras-configure.rule"
+		},
+		{
+			"file" : "C:/Users/fpmp0/OneDrive/Documentos/Nordic/teste_pedreiras/build/_sysbuild/sysbuild/images/teste_pedreiras-prefix/src/teste_pedreiras-stamp/teste_pedreiras-download.rule"
+		},
+		{
+			"file" : "C:/Users/fpmp0/OneDrive/Documentos/Nordic/teste_pedreiras/build/_sysbuild/sysbuild/images/teste_pedreiras-prefix/src/teste_pedreiras-stamp/teste_pedreiras-install.rule"
+		},
+		{
+			"file" : "C:/Users/fpmp0/OneDrive/Documentos/Nordic/teste_pedreiras/build/_sysbuild/sysbuild/images/teste_pedreiras-prefix/src/teste_pedreiras-stamp/teste_pedreiras-mkdir.rule"
+		},
+		{
+			"file" : "C:/Users/fpmp0/OneDrive/Documentos/Nordic/teste_pedreiras/build/_sysbuild/sysbuild/images/teste_pedreiras-prefix/src/teste_pedreiras-stamp/teste_pedreiras-patch.rule"
+		},
+		{
+			"file" : "C:/Users/fpmp0/OneDrive/Documentos/Nordic/teste_pedreiras/build/_sysbuild/sysbuild/images/teste_pedreiras-prefix/src/teste_pedreiras-stamp/teste_pedreiras-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"teste_pedreiras"
+		],
+		"name" : "teste_pedreiras"
+	}
+}
