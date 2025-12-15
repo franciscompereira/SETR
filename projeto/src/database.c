@@ -1,11 +1,14 @@
 #include "database.h"
 
 // 1. PRIVATE DATA
-static float  target_temp = 19.0f;
+static volatile float  target_temp = 19.0f;
 static float  current_temp = 0.0f;
-static float  raw_temp = 0.0f;
+//static float  raw_temp = 0.0f;
 static int    current_power = 0;
-static bool   system_enable = false;
+static volatile bool   system_enable = false;
+
+K_SEM_DEFINE(adc_data_sem, 0, 1);
+K_SEM_DEFINE(pwm_data_sem, 0, 1); // Starts locked
 
 K_MUTEX_DEFINE(db_mutex);
 
@@ -16,13 +19,13 @@ void db_init(void) {
 // 3. ACCESS FUNCTIONS
 
 void db_write_target_temp(float new_target) {
-    k_mutex_lock(&db_mutex, K_FOREVER);
+    //k_mutex_lock(&db_mutex, K_FOREVER);
     // Safety Limits
     if (new_target > 60.0f) new_target = 60.0f; 
     if (new_target < 20.0f) new_target = 20.0f;
 
     target_temp = new_target;
-    k_mutex_unlock(&db_mutex);
+    //k_mutex_unlock(&db_mutex);
 }
 
 float db_read_target_temp(void) {
@@ -59,9 +62,9 @@ int db_read_current_power(void) {
 }
 
 void db_write_system_enable(bool enable) {
-    k_mutex_lock(&db_mutex, K_FOREVER);
+    //k_mutex_lock(&db_mutex, K_FOREVER);
     system_enable = enable;
-    k_mutex_unlock(&db_mutex);
+    //k_mutex_unlock(&db_mutex);
 }
 
 bool db_read_system_enable(void) {
@@ -71,6 +74,7 @@ bool db_read_system_enable(void) {
     return val;
 }
 
+/*
 void db_write_raw_temp(float val) {
     k_mutex_lock(&db_mutex, K_FOREVER);
     raw_temp = val;
@@ -83,3 +87,5 @@ float db_read_raw_temp(void) {
     k_mutex_unlock(&db_mutex);
     return val;
 }
+
+*/

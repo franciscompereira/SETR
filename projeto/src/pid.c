@@ -29,6 +29,27 @@ int pid_compute(PID_Config *pid, float setpoint, float current_val, float dt) {
     float output = P + I + D; // Total
     
     if (output > pid->out_max) {
+        output = pid->out_max;
+        /* Only stop growing if we are adding to the problem */
+        if (error > 0) {
+            pid->integral -= error * dt; 
+        }
+    } else if (output < pid->out_min) {
+        output = pid->out_min;
+        /* Only stop growing if we are adding to the problem */
+        if (error < 0) {
+            pid->integral -= error * dt;
+        }
+    }
+
+    pid->prev_error = error; // Guardar estado
+
+    return (int)output;
+}
+
+/* old version
+
+ if (output > pid->out_max) {
         output = pid->out_max; // Estabelecer maximos 
         pid->integral -= error * dt; 
     } else if (output < pid->out_min) {
@@ -36,7 +57,4 @@ int pid_compute(PID_Config *pid, float setpoint, float current_val, float dt) {
         pid->integral -= error * dt;
     }
 
-    pid->prev_error = error; // Guardar estado
-
-    return (int)output;
-}
+*/

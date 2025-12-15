@@ -3,8 +3,10 @@
 
 #include <zephyr/kernel.h>
 
-// Initialize the database (mutex)
-void db_init(void);
+extern struct k_sem adc_data_sem;
+extern struct k_sem pwm_data_sem; // <--- The new signal
+
+void db_init(void); // Initialize the database (mutex)
 
 // WRITERS
 void db_write_target_temp(float new_target);
